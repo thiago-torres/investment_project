@@ -1,0 +1,14 @@
+{
+    "library":"yfinance",
+    "start_date": "2020-01-01",
+    "tickers": [
+        "ALZM11.SA", "MCCI11.SA", "FGAA11.SA", "MXRF11.SA", "KNHF11.SA", "VGHF11.SA",
+        "KNCA11.SA", "VGIR11.SA", "BTLG11.SA", "RBRR11.SA", "HGCR11.SA", "LVBI11.SA",
+        "KNSC11.SA", "VRTA11.SA", "BCFF11.SA", "MALL11.SA", "RECR11.SA", "RZAK11.SA",
+        "KNRI11.SA", "ALZR11.SA", "BRCO11.SA", "RBRY11.SA", "KNCR11.SA", "KNHY11.SA",
+        "JSRE11.SA", "HFOF11.SA", "RBRF11.SA", "VISC11.SA", "CPTS11.SA", "KNIP11.SA",
+        "XPCA11.SA", "TRXF11.SA", "BTCI11.SA", "HGFF11.SA", "XPSF11.SA", "CVBI11.SA",
+        "XPLG11.SA", "IRDM11.SA", "HSML11.SA", "HGBS11.SA", "HGRU11.SA", "XPML11.SA",
+        "HGLG11.SA", "JSAF11.SA", "TVRI11.SA", "KFOF11.SA"
+    ]
+}
