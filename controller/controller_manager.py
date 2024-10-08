@@ -8,7 +8,7 @@ class ControllerManager():
 
     def analysis_asset(self, assets):        
         if assets == '1':
-            self.assets = load_assets('model/brazilian_assets.json')            
+            self.assets = load_assets('model/brazilian_stocks.json')            
         elif assets == '2':
             self.assets = load_assets('model/brazilian_reits.json')
         else:
