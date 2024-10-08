@@ -6,7 +6,7 @@ class ControllerManager():
         self.analysis = AnalysisManager()
         self.assets = None        
 
-    def analysis_asset(self, assets):        
+    def analysis_global_asset(self, assets):        
         if assets == '1':
             self.assets = load_assets('model/brazilian_stocks.json')            
         elif assets == '2':

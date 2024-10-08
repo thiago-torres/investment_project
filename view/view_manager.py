@@ -1,7 +1,7 @@
 from controller.controller_manager import ControllerManager
-from view.utils import get_user_asset_selection
-from view.utils import link_tradingview
-from view.utils import style_dataframe
+from view.view_utils import get_global_asset_selection
+from view.view_utils import link_tradingview
+from view.view_utils import style_dataframe
 
 from IPython.display import clear_output, HTML, display
 
@@ -10,15 +10,18 @@ class ViewManager():
         self.controller = ControllerManager()
         self.analyzed_assets = None
 
-    def get_analysis_asset(self):
-        assets = get_user_asset_selection()
-        clear_output(wait=True)
-
+    def get_analysis_global_assets(self):
+        assets = get_global_asset_selection()
+        
         if assets != '4':          
-            self.analyzed_assets = self.controller.analysis_asset(assets)
+            self.analyzed_assets = self.controller.analysis_global_asset(assets)
             self.display_assets()
         else:
             return 'canceled'     
+
+    def get_analysis_my_assets(self):
+
+        return None
 
     def display_assets(self):
         if self.analyzed_assets is not None and not self.analyzed_assets.empty:
