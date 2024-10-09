@@ -1,7 +1,7 @@
 import sqlite3
 import pandas as pd
 
-class DbManager:
+class ModelManager:
     def __init__(self):
         self.conn = sqlite3.connect('model/investments.db')
     
@@ -29,7 +29,7 @@ class DbManager:
     
 
     def insert_transaction(self, broker, date, asset_type, asset_name, transaction_type, quantity, unit_price, fee):
-        """Insere uma nova transação na tabela transactions."""
+        
         query = '''
             INSERT INTO transactions (broker, date, asset_type, asset_name, transaction_type, quantity, unit_price, fee)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
