@@ -10,10 +10,12 @@ class AnalysisManager:
         self.asset_hour = None
         self.asset_day = None
         self.asset_week = None
-        self.analized_assets = pd.DataFrame()
 
     def analysis_asset_process(self, assets):
-        
+        analized_assets = pd.DataFrame()
+        print(f"Tamanho do DataFrame: {analized_assets.shape[0]}")
+        print(f"Número de tickers: {len(assets['tickers'])}")
+                
         if assets["library"] == "yfinance":
             for ticker in assets['tickers']:
                 self.asset_week = download_yfinance_data(tickers=ticker, start_date=assets['start_date'], interval='1wk')
@@ -47,10 +49,10 @@ class AnalysisManager:
                     }
                 )
                 
-                self.analized_assets = pd.concat([self.analized_assets,analized_ticker])            
+                analized_assets = pd.concat([analized_assets,analized_ticker])            
 
-            self.analized_assets = self.analized_assets.round(3)
-            return self.analized_assets.set_index([assets['tickers']])
+            analized_assets = analized_assets.round(3)
+            return analized_assets.set_index([assets['tickers']])
 
 
 

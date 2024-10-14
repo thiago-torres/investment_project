@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Análise de Ativos Globais</title>
+</head>
+<body>
+    <h1>Análise de Ativos Globais</h1>
+    
+    <label for="asset-selection">Selecione um grupo para análise:</label>
+    <select id="asset-selection">
+        <option value="1">Ações Brasileiras</option>
+        <option value="2">Fundos Imobiliários</option>
+        <option value="3">Criptomoedas</option>
+    </select>
+    
+    <button onclick="performAnalysis()"> Ir </button>
+    <div id="result"></div>
+
+    <script>
+        function performAnalysis() {
+            const selected = document.getElementById('asset-selection').value;
+            
+            fetch('/api/analyze-global-assets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({ selected: selected })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na análise dos ativos');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('result').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Ocorreu um erro:', error);
+                document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
+            });
+        }
+    </script>
+</body>
+</html>
