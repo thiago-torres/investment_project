@@ -22,7 +22,7 @@ class ControllerManager():
         
         if selected == '1':
             self.selected_assets = db.get_assets(filter)
-            asset_names = self.selected_assets['asset_name'].tolist()
+            asset_names = self.selected_assets['ticker'].tolist()
 
             assets_data = {
                 'library': 'yfinance',
