@@ -50,7 +50,7 @@ class AnalysisManager:
                 )
                 
                 analized_assets = pd.concat([analized_assets,analized_ticker])            
-
+                print(analized_assets)
             analized_assets = analized_assets.round(3)
             return analized_assets.set_index([assets['tickers']])
 
