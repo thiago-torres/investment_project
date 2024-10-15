@@ -3,10 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Análise de Ativos Pessoais</title>
+    <style>
+        /* Spinner de carregamento */
+        #loading-spinner {
+            display: none;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
     <h1>Análise de Ativos Pessoais</h1>
-    
+
     <label for="asset-selection">Selecione uma opção:</label>
     <select id="asset-selection" onchange="updateFiltersAndButton()">
         <option value="">-- Selecione --</option>
@@ -19,7 +36,7 @@
     <div id="filters" style="display:none;">
         <label for="asset-type">Selecione o filtro:</label>
         <select id="asset-type" onchange="checkOtherAsset()">
-            <option value="">-- Sem filtro --</option>
+            <option value="">Sem filtro</option>
             <option value="stock">Ações</option>
             <option value="fii">FIIs</option>
             <option value="outros">Outros</option>
@@ -30,7 +47,10 @@
             <input type="text" id="other-asset" placeholder="Ex: DASA">
         </div>
     </div>
-    
+
+    <!-- Spinner de carregamento -->
+    <div id="loading-spinner"></div>
+
     <!-- Botão desativado inicialmente -->
     <button id="submit-button" onclick="performPersonalAnalysis()" disabled> Ir </button>
     <div id="result"></div>
@@ -75,6 +95,9 @@
                 otherAsset: assetType === 'outros' ? otherAsset : ''
             };
 
+            // Exibir o spinner de carregamento
+            document.getElementById('loading-spinner').style.display = 'block';
+
             fetch('/api/analyze-personal-assets', {
                 method: 'POST',
                 headers: {
@@ -89,9 +112,13 @@
                 return response.text();
             })
             .then(data => {
+                // Ocultar o spinner de carregamento
+                document.getElementById('loading-spinner').style.display = 'none';
                 document.getElementById('result').innerHTML = data;
             })
             .catch(error => {
+                // Ocultar o spinner em caso de erro
+                document.getElementById('loading-spinner').style.display = 'none';
                 console.error('Ocorreu um erro:', error);
                 document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
             });
