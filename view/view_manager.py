@@ -10,8 +10,8 @@ class ViewManager():
         self.analyzed_assets = self.controller.analysis_global_asset(selected)
         return self.display_analyzed_assets()
 
-    def analyze_personal_assets(self, selected):
-        self.analyzed_assets = self.controller.analysis_my_asset(selected)
+    def analyze_personal_assets(self, selected, filter):
+        self.analyzed_assets = self.controller.analysis_my_asset(selected, filter)
         if selected != '1':
             print(self.analyzed_assets)
             return self.analyzed_assets.to_html(escape=False)

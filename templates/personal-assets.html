@@ -7,26 +7,80 @@
 <body>
     <h1>Análise de Ativos Pessoais</h1>
     
-    <label for="asset-selection">Selecione um ativo pessoal:</label>
-    <select id="asset-selection">
+    <label for="asset-selection">Selecione uma opção:</label>
+    <select id="asset-selection" onchange="updateFiltersAndButton()">
+        <option value="">-- Selecione --</option>
         <option value="1">Analisar Meus Ativos</option>
         <option value="2">Consultar Meus Ativos</option>
         <option value="3">Consultar Minhas Transações</option>
     </select>
+
+    <!-- Filtros adicionais que serão exibidos dinamicamente -->
+    <div id="filters" style="display:none;">
+        <label for="asset-type">Selecione o filtro:</label>
+        <select id="asset-type" onchange="checkOtherAsset()">
+            <option value="">-- Sem filtro --</option>
+            <option value="stock">Ações</option>
+            <option value="fii">FIIs</option>
+            <option value="outros">Outros</option>
+        </select>
+
+        <div id="other-asset-input" style="display:none;">
+            <label for="other-asset">Digite o nome do ativo:</label>
+            <input type="text" id="other-asset" placeholder="Ex: DASA">
+        </div>
+    </div>
     
-    <button onclick="performPersonalAnalysis()"> Ir </button>
+    <!-- Botão desativado inicialmente -->
+    <button id="submit-button" onclick="performPersonalAnalysis()" disabled> Ir </button>
     <div id="result"></div>
 
     <script>
+        // Função para habilitar/desabilitar o botão e atualizar filtros
+        function updateFiltersAndButton() {
+            const selected = document.getElementById('asset-selection').value;
+            const filtersDiv = document.getElementById('filters');
+            const submitButton = document.getElementById('submit-button');
+
+            // Exibir filtros e ativar botão somente se uma opção válida for escolhida
+            if (selected) {
+                filtersDiv.style.display = 'block';
+                submitButton.disabled = false;
+            } else {
+                filtersDiv.style.display = 'none';
+                submitButton.disabled = true;
+            }
+        }
+
+        // Exibir campo adicional se o tipo de ativo for "Outros"
+        function checkOtherAsset() {
+            const assetType = document.getElementById('asset-type').value;
+            const otherAssetDiv = document.getElementById('other-asset-input');
+
+            if (assetType === 'outros') {
+                otherAssetDiv.style.display = 'block';
+            } else {
+                otherAssetDiv.style.display = 'none';
+            }
+        }
+
         function performPersonalAnalysis() {
             const selected = document.getElementById('asset-selection').value;
-            
+            const assetType = document.getElementById('asset-type').value;
+            const otherAsset = document.getElementById('other-asset').value;
+
+            const data = {
+                selected: selected,
+                assetType: assetType,
+                otherAsset: assetType === 'outros' ? otherAsset : ''
+            };
+
             fetch('/api/analyze-personal-assets', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: new URLSearchParams({ selected: selected })
+                body: new URLSearchParams(data)
             })
             .then(response => {
                 if (!response.ok) {

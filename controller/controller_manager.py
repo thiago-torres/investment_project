@@ -17,11 +17,11 @@ class ControllerManager():
         print(self.selected_assets)
         return self.analysis.analysis_asset_process(assets=self.selected_assets)
         
-    def analysis_my_asset(self, selected):
+    def analysis_my_asset(self, selected, filter):
         db = ModelManager()
         
         if selected == '1':
-            self.selected_assets = db.get_assets('')
+            self.selected_assets = db.get_assets(filter)
             asset_names = self.selected_assets['asset_name'].tolist()
 
             assets_data = {
@@ -34,8 +34,8 @@ class ControllerManager():
             return self.analysis.analysis_asset_process(assets=assets_data) 
         
         elif selected == '2':
-            self.selected_assets = db.get_assets('')
+            self.selected_assets = db.get_assets(filter)
         else:
-            self.selected_assets = db.get_transactions('')
+            self.selected_assets = db.get_transactions(filter)
         
         return self.selected_assets

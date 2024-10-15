@@ -28,8 +28,15 @@ def analyze_global_assets():
 
 @app.route('/api/analyze-personal-assets', methods=['POST'])
 def analyze_personal_assets():
+
     selected = request.form.get('selected')
-    result = view_manager.analyze_personal_assets(selected)
+    asset_type = request.form.get('assetType')
+    other_asset = request.form.get('otherAsset')
+
+    if asset_type == 'outros':
+        asset_type = other_asset
+
+    result = view_manager.analyze_personal_assets(selected, asset_type)
     
     if result:
         return result

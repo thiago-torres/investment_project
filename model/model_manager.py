@@ -10,6 +10,7 @@ class ModelManager:
 
     def get_assets(self, search_term=None):
         if search_term:
+            print(search_term)
             query = "SELECT * FROM assets WHERE asset_name LIKE ? OR asset_type LIKE ?"
             params = (f'%{search_term}%', f'%{search_term}%')
             return self.fetch_query(query, params)
