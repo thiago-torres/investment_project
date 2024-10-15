@@ -19,7 +19,7 @@ class ModelManager:
 
     def get_transactions(self, search_term=None):
         if search_term:
-            query = "SELECT * FROM transactions WHERE ticker LIKE ? OR broker LIKE ? OR transaction LIKE ? OR type LIKE ?"
+            query = "SELECT * FROM transactions WHERE ticker LIKE ? OR broker LIKE ? OR \"transaction\" LIKE ? OR type LIKE ?"
             params = (f'%{search_term}%', f'%{search_term}%', f'%{search_term}%', f'%{search_term}%')
             return self.fetch_query(query, params)
         else:
