@@ -34,8 +34,12 @@ class ControllerManager():
             return self.analysis.analysis_asset_process(assets=assets_data) 
         
         elif selected == '2':
-            self.selected_assets = db.get_assets(filter)
+            self.selected_assets = db.get_assets(filter)            
+            self.selected_assets['Investido'] = self.selected_assets['cotas'] * self.selected_assets['pm']
+
+            return self.selected_assets
         else:
             self.selected_assets = db.get_transactions(filter)
+            return self.selected_assets
         
-        return self.selected_assets
+        
