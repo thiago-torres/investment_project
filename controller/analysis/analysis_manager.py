@@ -4,6 +4,7 @@ from controller.analysis.calculate_indicators import calculate_indicators
 from controller.analysis.calculate_indicators import calculate_fibonacci_retracement
 
 import pandas as pd
+from datetime import datetime, timedelta
 
 class AnalysisManager:
     def __init__(self):
@@ -111,4 +112,16 @@ class AnalysisManager:
 
         elif assets["library"] == "coinalyze":
             print("coinanalyze off")
-        
+
+    def analysis_personal_assets(self, tickers):
+        last_prices = []  
+
+        for ticker in tickers:
+            start_date = (datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d')
+            data = download_yfinance_data(tickers=ticker, start_date=start_date, interval='1d')
+            if data is not None and not data.empty:
+                last_prices.append(data['Close'].iloc[-1])
+            else:
+                last_prices.append(0) 
+
+        return last_prices

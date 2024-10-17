@@ -31,12 +31,13 @@ class ControllerManager():
             }
             
             print(assets_data) 
-            return self.analysis.analysis_asset_process(assets=assets_data) 
+            return self.analysis.analysis_asset_process(assets=assets_data)
         
         elif selected == '2':
-            self.selected_assets = db.get_assets(filter)            
-            self.selected_assets['Investido'] = self.selected_assets['cotas'] * self.selected_assets['pm']
-
+            self.selected_assets = db.get_assets(filter)
+            self.selected_assets['atual'] = self.analysis.analysis_personal_assets(self.selected_assets['ticker'])
+            self.selected_assets['investido'] = self.selected_assets['cotas'] * self.selected_assets['pm']
+            self.selected_assets['valor atual'] = self.selected_assets['cotas'] * self.selected_assets['atual']
             return self.selected_assets
         else:
             self.selected_assets = db.get_transactions(filter)
