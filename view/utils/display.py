@@ -1,19 +1,38 @@
 import pandas as pd
 
 def link_tradingview(ticker):
-    # Retornar link específico para USD/BRL
     if isinstance(ticker, tuple):
         ticker = ticker[0]  # Extrai o ticker se for uma tupla
+    
+    # link2 referente ao gráfico do coinalyze será habilitado no futuro precisará criar uma lista para checar o nome completo do ativo por exemplo BTC=bitcoin
+
     if ticker == 'USD/BRL':
         return f'<a href="https://br.tradingview.com/chart/JKfvODlT/?symbol=FX_IDC%3AUSDBRL" target="_blank">{ticker}</a>'
-    # Retornar link específico para tickers terminados com -USD
+    
+    elif ticker == 'BTCDOMUSDT_PERP.A':
+        link1 = f'<a href="https://br.tradingview.com/chart/JKfvODlT/?symbol=BITFINEX%3ABTCDOMUST.P" target="_blank">DOM-BTC</a>'
+        # link2 = f'<a href="https://br.coinalyze.net/binance-btcdom-index/usdt/binance/btcdomusdt_perp/price-chart-live/?tab=watchlists" target="_blank">DOM-BTC</a>'
+        return link1 # return f'{link1} | {link2}'
+    
+    elif ticker.endswith('_PERP.A'):
+        ticker_base = ticker.replace('USDT_PERP.A', '')
+        link1 = f'<a href="https://br.tradingview.com/chart/JKfvODlT/?symbol=BINANCE%3A{ticker_base}USDT" target="_blank">{ticker_base}USDT</a>'
+        # link2 = f'<a href="https://br.coinalyze.net/{nome_cripto_por_extenso(ticker_base.lower())}/usdt/binance/{ticker_base.lower()}usdt_perp/price-chart-live/?tab=watchlists" target="_blank">{ticker_base}USDT</a>'
+        return link1
+    
+    elif ticker.endswith('-BRL'):
+        ticker_base = ticker.replace('-BRL', '')
+        link1 = f'<a href="https://br.tradingview.com/chart/JKfvODlT/?symbol=BINANCE%3A{ticker_base}USDT" target="_blank">{ticker_base}USDT</a>'
+        # link2 = f'<a href="https://br.coinalyze.net/{nome_cripto_por_extenso(ticker_base.lower())}/usdt/binance/{ticker_base.lower()}usdt_perp/price-chart-live/?tab=watchlists" target="_blank">{ticker_base}USDT</a>'
+        return link1
+    
     elif ticker.endswith('-USD'):
-        ticker = ticker.replace('-USD', '')  # Remove '-USD' do ticker
-        return f'<a href="https://br.tradingview.com/chart/JKfvODlT/?symbol=BINANCE%3A{ticker}USDT" target="_blank">{ticker}-USD</a>'
-    # Retornar link padrão para outros ativos
+        ticker_base = ticker.replace('-USD', '')
+        return f'<a href="https://br.tradingview.com/chart/JKfvODlT/?symbol=BINANCE%3A{ticker_base}USDT" target="_blank">{ticker_base}-USD</a>'
+    
     else:
-        ticker = ticker.split("'")[1] if "'" in ticker else ticker  # Pega o ticker
-        ticker = ticker.replace(".SA", "")  # Remove '.SA' se presente
+        ticker = ticker.split("'")[1] if "'" in ticker else ticker
+        ticker = ticker.replace(".SA", "")
         return f'<a href="https://br.tradingview.com/chart/JKfvODlT/?symbol=BMFBOVESPA%3A{ticker}" target="_blank">{ticker}</a>'
     
 
