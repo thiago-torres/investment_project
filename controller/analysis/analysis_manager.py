@@ -68,7 +68,7 @@ class AnalysisManager:
                 self.asset_day = pd.DataFrame(self.asset_day)
                 self.asset_day['c'] = list(map(float, self.asset_day['c']))
 
-                self.asset_hour = api.get_candles(symbol=ticker,resolution="1h",start="1729123200") 
+                self.asset_hour = api.get_candles(symbol=ticker,resolution="1h",start="1728878400") 
                 self.asset_hour['c'] = list(map(float, self.asset_hour['c']))   
                 self.asset_hour = pd.DataFrame(self.asset_hour)                
 
