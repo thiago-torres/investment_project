@@ -21,6 +21,9 @@
     <!-- Custom styles for this template-->
     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <!-- Custom styles for this page -->
+    <link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+
     <style>
         /* Spinner de carregamento */
         #loading-spinner {
@@ -211,41 +214,122 @@
                 
                     <button onclick="performAnalysis()"> Ir </button>
                     <div id="result"></div>
-                
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Ticker</th>
+                                            <th>Value</th>
+                                            <th>EMA 1h</th>
+                                            <th>EMA Day</th>
+                                            <th>EMA Week</th>
+                                            <th>RSI 1h</th>
+                                            <th>RSI Day</th>
+                                            <th>RSI Week</th>
+                                            <th>Fib 23%</th>
+                                            <th>Fib 38%</th>
+                                            <th>Fib 50%</th>
+                                            <th>Fib 61%</th>
+                                            <th>Fib 78%</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Ticker</th>
+                                            <th>Value</th>
+                                            <th>EMA 1h</th>
+                                            <th>EMA Day</th>
+                                            <th>EMA Week</th>
+                                            <th>RSI 1h</th>
+                                            <th>RSI Day</th>
+                                            <th>RSI Week</th>
+                                            <th>Fib 23%</th>
+                                            <th>Fib 38%</th>
+                                            <th>Fib 50%</th>
+                                            <th>Fib 61%</th>
+                                            <th>Fib 78%</th>
+                                        </tr>
+                                    </tfoot>                                  
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <script>
-                        function performAnalysis() {
-                            const selected = document.getElementById('asset-selection').value;
+                    // Inicializar o DataTable fora do fetch
+                    $(document).ready(function() {
+                        $('#dataTable').DataTable();
+                    });
 
-                            // Exibir o spinner de carregamento
-                            document.getElementById('loading-spinner').style.display = 'block';
+                    function performAnalysis() {
+                        const selected = document.getElementById('asset-selection').value;
 
-                            fetch('/api/analyze-global-assets', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({ selected })  
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Erro na análise dos ativos');
-                                }
-                                return response.text();  // resposta como texto (HTML) futuramente mudar pra json response.json(); quando tratar html na pagina
-                            })
-                            .then(html => {
-                                // Ocultar o spinner de carregamento
-                                document.getElementById('loading-spinner').style.display = 'none';
-                                document.getElementById('result').innerHTML = html;
-                            })
-                            .catch(error => {
-                                // Ocultar o spinner em caso de erro
-                                document.getElementById('loading-spinner').style.display = 'none';
-                                console.error('Ocorreu um erro:', error);
-                                document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
+                        // Exibir o spinner de carregamento
+                        document.getElementById('loading-spinner').style.display = 'block';
+
+                        fetch('/api/analyze-global-assets', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ selected })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro na análise dos ativos');
+                            }
+                            return response.json(); 
+                        })
+                        .then(data => {
+                            // Ocultar o spinner de carregamento
+                            document.getElementById('loading-spinner').style.display = 'none';
+
+                            // Limpar a tabela antes de adicionar novos dados
+                            const dataTable = $('#dataTable').DataTable();
+                            dataTable.clear(); // Limpa os dados existentes na DataTable
+
+                            // Iterar sobre os dados e adicionar linhas à DataTable
+                            data.forEach(item => {
+                                dataTable.row.add([
+                                    item.Ticker,
+                                    item.Value,
+                                    item['EMA 1h'],
+                                    item['EMA Day'],
+                                    item['EMA Week'],
+                                    item['RSI 1h'],
+                                    item['RSI Day'],
+                                    item['RSI Week'],
+                                    item['Fib 23%'],
+                                    item['Fib 38%'],
+                                    item['Fib 50%'],
+                                    item['Fib 61%'],
+                                    item['Fib 78%']
+                                ]);
                             });
-                        }
 
+                            // Redesenhar a tabela para mostrar os novos dados
+                            dataTable.draw();
+                        })
+                        .catch(error => {
+                            // Ocultar o spinner em caso de erro
+                            document.getElementById('loading-spinner').style.display = 'none';
+                            console.error('Ocorreu um erro:', error);
+                            document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
+                        });
+                    }
+                    
                     </script>
+                    
                 
 
                 </div>
@@ -284,6 +368,13 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
 
 </body>
 

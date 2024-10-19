@@ -29,7 +29,11 @@ def analyze_global_assets():
     data = request.json
     selected = data.get('selected')
     result = view_manager.analyze_global_assets(selected)
-    
+
+    result = result.to_json(orient='records')
+
+    print(result)
+
     if result:
         return result
     else:
