@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Investment Project - 404</title>
+    <title>Investment Project - Global</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -20,6 +20,24 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <style>
+        /* Spinner de carregamento */
+        #loading-spinner {
+            display: none;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 
 </head>
 
@@ -178,16 +196,60 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- 404 Error Text -->
-                    <div class="text-center">
-                        <div class="error mx-auto" data-text="404">404</div>
-                        <p class="lead text-gray-800 mb-5">Page Not Found</p>
-                        <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
-                        <a href="/">&larr; Back to Dashboard</a>
-                    </div>
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Análise de Ativos Globais</h1>
+
+                    <label for="asset-selection">Selecione um grupo para análise:</label>
+                    <select id="asset-selection">
+                        <option value="1">Ações Brasileiras</option>
+                        <option value="2">Fundos Imobiliários</option>
+                        <option value="3">Criptomoedas</option>
+                    </select>
+                    
+                    <!-- Spinner de carregamento -->
+                    <div id="loading-spinner"></div>
+                
+                    <button onclick="performAnalysis()"> Ir </button>
+                    <div id="result"></div>
+                
+                    <script>
+                        function performAnalysis() {
+                            const selected = document.getElementById('asset-selection').value;
+
+                            // Exibir o spinner de carregamento
+                            document.getElementById('loading-spinner').style.display = 'block';
+
+                            fetch('/api/analyze-global-assets', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ selected })  
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Erro na análise dos ativos');
+                                }
+                                return response.text();  // resposta como texto (HTML) futuramente mudar pra json response.json(); quando tratar html na pagina
+                            })
+                            .then(html => {
+                                // Ocultar o spinner de carregamento
+                                document.getElementById('loading-spinner').style.display = 'none';
+                                document.getElementById('result').innerHTML = html;
+                            })
+                            .catch(error => {
+                                // Ocultar o spinner em caso de erro
+                                document.getElementById('loading-spinner').style.display = 'none';
+                                console.error('Ocorreu um erro:', error);
+                                document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
+                            });
+                        }
+
+                    </script>
+                
 
                 </div>
-                <!-- /.container-fluid -->
+                <!-- Content Row -->
 
             </div>
             <!-- End of Main Content -->

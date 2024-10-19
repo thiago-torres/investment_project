@@ -58,6 +58,31 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
+            
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Páginas</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Ativos:</h6>
+                        <a class="collapse-item" href="{{ url_for('global_assets') }}">Global</a>
+                        <div class="collapse-divider"></div>
+                        <a class="collapse-item" href="{{ url_for('personal_assets') }}">Pessoal</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Addons
+            </div>
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
@@ -85,32 +110,6 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">                        
-                        <h6 class="collapse-header">Página 404:</h6>
-                        <a class="collapse-item" href="{{ url_for('page404') }}">Página 404</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Página em Branco:</h6>
-                        <a class="collapse-item" href="{{ url_for('blank') }}">Página em Branco</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Páginas Extra</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Página 404:</h6>
                         <a class="collapse-item" href="{{ url_for('page404') }}">Página 404</a>
                         <div class="collapse-divider"></div>

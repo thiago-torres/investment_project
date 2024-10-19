@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Investment Project - 404</title>
+    <title>Investment Project - BLANK</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -20,6 +20,24 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <style>
+        /* Spinner de carregamento */
+        #loading-spinner {
+            display: none;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 
 </head>
 
@@ -143,7 +161,6 @@
 
         </ul>
         <!-- End of Sidebar -->
-
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -178,16 +195,113 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- 404 Error Text -->
-                    <div class="text-center">
-                        <div class="error mx-auto" data-text="404">404</div>
-                        <p class="lead text-gray-800 mb-5">Page Not Found</p>
-                        <p class="text-gray-500 mb-0">It looks like you found a glitch in the matrix...</p>
-                        <a href="/">&larr; Back to Dashboard</a>
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Análise de Ativos Pessoais</h1>
+
+                    <label for="asset-selection">Selecione uma opção:</label>
+                    <select id="asset-selection" onchange="updateFiltersAndButton()">
+                        <option value="">-- Selecione --</option>
+                        <option value="1">Analisar Meus Ativos</option>
+                        <option value="2">Consultar Meus Ativos</option>
+                        <option value="3">Consultar Minhas Transações</option>
+                    </select>
+                
+                    <!-- Filtros adicionais que serão exibidos dinamicamente -->
+                    <div id="filters" style="display:none;">
+                        <label for="asset-type">Selecione o filtro:</label>
+                        <select id="asset-type" onchange="checkOtherAsset()">
+                            <option value="">Sem filtro</option>
+                            <option value="stock">Ações</option>
+                            <option value="fii">FIIs</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                
+                        <div id="other-asset-input" style="display:none;">
+                            <label for="other-asset">Digite o nome do ativo:</label>
+                            <input type="text" id="other-asset" placeholder="Ex: DASA">
+                        </div>
                     </div>
+                
+                    <!-- Spinner de carregamento -->
+                    <div id="loading-spinner"></div>
+                
+                    <!-- Botão desativado inicialmente -->
+                    <button id="submit-button" onclick="performPersonalAnalysis()" disabled> Ir </button>
+                    <div id="result"></div>
+                
+                    <script>
+                        // Função para habilitar/desabilitar o botão e atualizar filtros
+                        function updateFiltersAndButton() {
+                            const selected = document.getElementById('asset-selection').value;
+                            const filtersDiv = document.getElementById('filters');
+                            const submitButton = document.getElementById('submit-button');
+                
+                            // Exibir filtros e ativar botão somente se uma opção válida for escolhida
+                            if (selected) {
+                                filtersDiv.style.display = 'block';
+                                submitButton.disabled = false;
+                            } else {
+                                filtersDiv.style.display = 'none';
+                                submitButton.disabled = true;
+                            }
+                        }
+                
+                        // Exibir campo adicional se o tipo de ativo for "Outros"
+                        function checkOtherAsset() {
+                            const assetType = document.getElementById('asset-type').value;
+                            const otherAssetDiv = document.getElementById('other-asset-input');
+                
+                            if (assetType === 'outros') {
+                                otherAssetDiv.style.display = 'block';
+                            } else {
+                                otherAssetDiv.style.display = 'none';
+                            }
+                        }
+                
+                        function performPersonalAnalysis() {
+                            const selected = document.getElementById('asset-selection').value;
+                            const assetType = document.getElementById('asset-type').value;
+                            const otherAsset = document.getElementById('other-asset').value;
+                
+                            const data = {
+                                selected: selected,
+                                assetType: assetType,
+                                otherAsset: assetType === 'outros' ? otherAsset : ''
+                            };
+                
+                            // Exibir o spinner de carregamento
+                            document.getElementById('loading-spinner').style.display = 'block';
+                
+                            fetch('/api/analyze-personal-assets', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(data)
+                            })
+
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Erro na análise dos ativos pessoais');
+                                }
+                                return response.text();
+                            })
+                            .then(data => {
+                                // Ocultar o spinner de carregamento
+                                document.getElementById('loading-spinner').style.display = 'none';
+                                document.getElementById('result').innerHTML = data;
+                            })
+                            .catch(error => {
+                                // Ocultar o spinner em caso de erro
+                                document.getElementById('loading-spinner').style.display = 'none';
+                                console.error('Ocorreu um erro:', error);
+                                document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
+                            });
+                        }
+                    </script>
 
                 </div>
-                <!-- /.container-fluid -->
+                <!-- Content Row -->
 
             </div>
             <!-- End of Main Content -->
