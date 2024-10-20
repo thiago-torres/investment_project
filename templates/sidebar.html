@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Invest <sup>Project</sup></div>
+        <div class="sidebar-brand-text mx-3">Projeto<sup>Invest</sup></div>
     </a>
 
     <!-- Divider -->
@@ -34,16 +34,23 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
             aria-expanded="true" aria-controls="collapsePages">
             <i class="fas fa-fw fa-folder"></i>
-            <span>Páginas</span>
+            <span>Meus Ativos</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Ativos:</h6>
-                <a class="collapse-item" href="{{ url_for('global_assets') }}">Global</a>
+                <!-- <a class="collapse-item" href="{{ url_for('global_assets') }}">Global</a> -->
                 <div class="collapse-divider"></div>
-                <a class="collapse-item" href="{{ url_for('personal_assets') }}">Pessoal</a>
+                <a class="collapse-item" href="{{ url_for('personal_assets') }}">Analisar Meus Ativos</a>
             </div>
         </div>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('global_assets') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Análise Ativos</span></a>
     </li>
 
     <!-- Divider -->
@@ -94,13 +101,6 @@
         <a class="nav-link" href="{{ url_for('page404') }}">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Charts</span></a>
-    </li>
-
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('page404') }}">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Tables</span></a>
     </li>
 
     <!-- Divider -->

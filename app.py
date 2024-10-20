@@ -24,6 +24,15 @@ def global_assets():
 def personal_assets():
     return render_template('personal-assets.html')
     
+@app.route('/chart-data')
+def chart_data():
+    # Exemplo de dados (normalmente, você buscaria isso do seu banco de dados)
+    data = {
+        "labels": ["Fundo A", "Fundo B", "Fundo C", "Fundo D"],
+        "values": [30, 50, 20, 40]
+    }
+    return jsonify(data)
+
 @app.route('/api/analyze-global-assets', methods=['POST'])
 def analyze_global_assets():
     data = request.json
