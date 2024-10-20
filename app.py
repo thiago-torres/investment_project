@@ -26,11 +26,7 @@ def personal_assets():
     
 @app.route('/chart-data')
 def chart_data():
-    # Exemplo de dados (normalmente, você buscaria isso do seu banco de dados)
-    data = {
-        "labels": ["Fundo A", "Fundo B", "Fundo C", "Fundo D"],
-        "values": [30, 50, 20, 40]
-    }
+    data = view_manager.get_chart_data()    
     return jsonify(data)
 
 @app.route('/api/analyze-global-assets', methods=['POST'])

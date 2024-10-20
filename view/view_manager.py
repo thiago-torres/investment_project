@@ -25,3 +25,7 @@ class ViewManager():
             
             return self.analyzed_assets
         return '<p>Nenhum ativo analisado.</p>'
+    
+    def get_chart_data(self):
+        data = self.controller.get_chart_data()
+        return data
