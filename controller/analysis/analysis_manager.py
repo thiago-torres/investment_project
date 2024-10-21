@@ -5,6 +5,7 @@ from controller.analysis.calculate_indicators import calculate_fibonacci_retrace
 
 import pandas as pd
 from datetime import datetime, timedelta
+import requests
 
 class AnalysisManager:
     def __init__(self):
@@ -117,13 +118,25 @@ class AnalysisManager:
 
     def analysis_personal_assets(self, tickers):
         last_prices = []  
+        headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+            }
 
         for ticker in tickers:
-            start_date = (datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d')
-            data = download_yfinance_data(tickers=ticker, start_date=start_date, interval='1d')
-            if data is not None and not data.empty:
-                last_prices.append(data['Close'].iloc[-1])
-            else:
-                last_prices.append(0) 
+            url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}.SA?range=1d&interval=1d"
+            
+            try:
+                response = requests.get(url=url, headers=headers)
+
+                if response.status_code == 200:
+                    last_prices.append(response.json()['chart']["result"][0]['indicators']['quote'][0]['close'][0])
+                else:
+                    print(f'Request failed with status code: {response.status_code}')
+                    last_prices.append(0)
+            
+            except Exception as e:
+                print(response.status_code)
+                print(f'An error occurred: {e}')
+                last_prices.append(0)
 
         return last_prices
