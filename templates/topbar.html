@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<!-- Topbar -->
+<nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
     <!-- Sidebar Toggle (Topbar) -->
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
@@ -6,7 +7,7 @@
 
     <!-- Google Search Form -->
     <form action="https://www.google.com/search" method="GET" target="_blank"
-          class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          class="form-inline mr-auto ml-md-3 my-2 my-md-0 search-box">
         <div class="input-group">
             <input type="text" name="q" class="form-control bg-light border-0 small" placeholder="Search on Google..."
                    aria-label="Search" aria-describedby="basic-addon2">
@@ -17,4 +18,57 @@
             </div>
         </div>
     </form>
+
+    <!-- Bitcoin Price Display -->
+    <div class="ml-auto d-flex align-items-center">
+        <i class="fas fa-coins btc-icon"></i>
+        <span class="price-display">
+            BTC/USD: <span id="btcPrice">Loading...</span>
+            (<span id="btcChange" class="">0.00%</span>)
+        </span>
+    </div>
 </nav>
+
+<!-- WebSocket Script -->
+<script>
+    let lastClosePrice = 0; // Preço de fechamento do último dia
+    const socket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade');
+
+    // Função para obter o preço de fechamento do último período
+    async function getLastClosePrice() {
+        const response = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+        const data = await response.json();
+        lastClosePrice = parseFloat(data.prevClosePrice);
+    }
+
+    // Calcular a variação e atualizar o preço
+    socket.onmessage = function(event) {
+        const message = JSON.parse(event.data);
+        const currentPrice = parseFloat(message.p).toFixed(2);
+        const priceElement = document.getElementById('btcPrice');
+        const changeElement = document.getElementById('btcChange');
+
+        priceElement.innerText = currentPrice;
+
+        if (lastClosePrice) {
+            const change = ((currentPrice - lastClosePrice) / lastClosePrice * 100).toFixed(2);
+            changeElement.innerText = `${change}%`;
+
+            // Alterar cor conforme o preço
+            if (change >= 0) {
+                priceElement.classList.remove('price-down');
+                priceElement.classList.add('price-up');
+                changeElement.classList.remove('price-down');
+                changeElement.classList.add('price-up');
+            } else {
+                priceElement.classList.remove('price-up');
+                priceElement.classList.add('price-down');
+                changeElement.classList.remove('price-up');
+                changeElement.classList.add('price-down');
+            }
+        }
+    };
+
+    // Obter o preço de fechamento ao carregar a página
+    getLastClosePrice();
+</script>
