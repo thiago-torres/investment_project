@@ -5,27 +5,25 @@
         <i class="fa fa-bars"></i>
     </button>
 
-    <!-- Google Search Form -->
-    <form action="https://www.google.com/search" method="GET" target="_blank"
-          class="form-inline mr-auto ml-md-3 my-2 my-md-0 search-box">
-        <div class="input-group">
-            <input type="text" name="q" class="form-control bg-light border-0 small" placeholder="Search on Google..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
+    <!-- Flex Container for Prices -->
+    <div class="d-flex align-items-center ml-auto">
+        <!-- Bitcoin Price Display -->
+        <div class="d-flex align-items-center mr-4">
+            <i class="fas fa-coins btc-icon"></i>
+            <span class="price-display">
+                BTC/USD: <span id="btcPrice">Loading...</span>
+                (<span id="btcChange" class="">0.00%</span>)
+            </span>
         </div>
-    </form>
 
-    <!-- Bitcoin Price Display -->
-    <div class="ml-auto d-flex align-items-center">
-        <i class="fas fa-coins btc-icon"></i>
-        <span class="price-display">
-            BTC/USD: <span id="btcPrice">Loading...</span>
-            (<span id="btcChange" class="">0.00%</span>)
-        </span>
+        <!-- IBOVESPA Price Display -->
+        <div class="d-flex align-items-center">
+            <i class="fas fa-chart-line ibov-icon"></i>
+            <span class="price-display">
+                IBOVESPA: <span id="ibovPrice">Loading...</span>
+                (<span id="ibovChange" class="">0.00%</span>)
+            </span>
+        </div>
     </div>
 </nav>
 
@@ -71,4 +69,41 @@
 
     // Obter o preço de fechamento ao carregar a página
     getLastClosePrice();
+
+
+
+    let lastCloseIbovPrice = 0; // Preço de fechamento do último dia para o IBOVESPA
+
+    // Função para obter o preço de fechamento do IBOVESPA
+    async function getIbovData() {
+        const response = await fetch('/ibovespa');  // Chamando o proxy server
+        const data = await response.json();
+
+        // Acessando os dados corretamente
+        const lastClose = data.chart.result[0].meta.chartPreviousClose;
+        const currentPrice = data.chart.result[0].indicators.quote[0].close[0];
+
+        const priceElement = document.getElementById('ibovPrice');
+        const changeElement = document.getElementById('ibovChange');
+
+        priceElement.innerText = currentPrice.toFixed(2);
+
+        const change = ((currentPrice - lastClose) / lastClose * 100).toFixed(2);
+        changeElement.innerText = `${change}%`;
+
+        if (change >= 0) {
+            priceElement.classList.remove('price-down');
+            priceElement.classList.add('price-up');
+            changeElement.classList.remove('price-down');
+            changeElement.classList.add('price-up');
+        } else {
+            priceElement.classList.remove('price-up');
+            priceElement.classList.add('price-down');
+            changeElement.classList.remove('price-up');
+            changeElement.classList.add('price-down');
+        }
+    }
+
+    getIbovData();
+
 </script>
