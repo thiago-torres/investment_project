@@ -4,6 +4,7 @@ from controller.analysis.calculate_indicators import calculate_indicators
 from controller.analysis.calculate_indicators import calculate_fibonacci_retracement
 
 import pandas as pd
+import time
 from datetime import datetime, timedelta
 import requests
 
@@ -80,7 +81,6 @@ class AnalysisManager:
                 else:
                     print(f"Data for {ticker} is empty. Skipping this asset.")
 
-
                 if self.asset_currently is None:
                     continue
 
@@ -126,17 +126,32 @@ class AnalysisManager:
             url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}.SA?range=1d&interval=1d"
             
             try:
+                # Tenta primeira API (Yahoo Finance)
                 response = requests.get(url=url, headers=headers)
 
                 if response.status_code == 200:
                     last_prices.append(response.json()['chart']["result"][0]['indicators']['quote'][0]['close'][0])
                 else:
-                    print(f'Request failed with status code: {response.status_code}')
-                    last_prices.append(0)
+                    print(f'Request to Yahoo Finance failed with status code: {response.status_code}')
+                    
+                    # Tenta segunda API (MB)
+                    api = MercadoBitcoinPublicData()                    
+                    
+                    try:
+                        response = api.get_tickers(symbols=ticker+"-BRL") 
+
+                        if response:
+                            last_prices.append(float(response[0]['last']))
+                        else:
+                            print(f'Request to MB failed with status code: {response.status_code}')
+                            last_prices.append(0)
+
+                    except Exception as e:
+                        print(f'An error occurred with MB API: {e}')
+                        last_prices.append(0)
             
             except Exception as e:
-                print(response.status_code)
-                print(f'An error occurred: {e}')
+                print(f'An error occurred with Yahoo Finance API: {e}')
                 last_prices.append(0)
 
         return last_prices
