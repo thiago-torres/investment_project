@@ -4,6 +4,6 @@
     "tickers": [
         "BTC-BRL", "ETH-BRL", "SOL-BRL", "XRP-BRL", "ADA-BRL", "DOGE-BRL", "AVAX-BRL", "TRX-BRL", "LINK-BRL", "DOT-BRL", "MATIC-BRL",
         "UNI-BRL", "LTC-BRL", "BCH-BRL", "ICP-BRL", "ATOM-BRL", "IMX-BRL", "STX-BRL", "WLD-BRL", "MKR-BRL", "ENS-BRL", "SUI-BRL", "RNDR-BRL",
-        "NEAR-BRL", "OP-BRL", "XLM-BRL", "HBAR-BRL", "LDO-BRL", "AAVE-BRL", "ARB-BRL", "FIL-BRL", "XTZ-BRL", "CHZ-BRL", "GALA-BRL", "ROSE-BRL"
+        "NEAR-BRL", "OP-BRL", "XLM-BRL", "HBAR-BRL", "LDO-BRL", "AAVE-BRL", "ARB-BRL", "FIL-BRL", "XTZ-BRL", "CHZ-BRL", "GALA-BRL", "ROSE-BRL", "SEI-BRL"
     ]
 }

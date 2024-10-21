@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Investment Project - Insert Transaction</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+          rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+   
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        {% include 'sidebar.html' %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                {% include 'topbar.html' %}
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <div class="container mt-5" style="max-width: 800px;">
+                        <h1 class="h3 mb-4 text-gray-800">Registro de Transações</h1>
+                
+                        <div class="form-group">
+                            <label for="asset-selection">Registrar transação:</label>
+                            <select class="form-control" id="asset-selection" onchange="updateFiltersAndButton()">
+                                <option value="">-- Selecione --</option>
+                                <option value="ações">Ações Brasileiras</option>
+                                <option value="FII">Fundos Imobiliários</option>
+                                <option value="cripto">Criptomoedas</option>
+                            </select>
+                        </div>
+                
+                        <div id="filters" style="display:none; margin-top: 10px;">
+                            <!-- Dois campos por linha no desktop -->
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="broker">Corretora:</label>
+                                    <input type="text" class="form-control" id="broker" placeholder="Ex: Nome da Corretora (Ex: Nubank)">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="data">Data da Transação:</label>
+                                    <input type="date" class="form-control" id="data">
+                                </div>
+                            </div>
+                
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="ticker">Ticker:</label>
+                                    <input type="text" class="form-control" id="ticker" placeholder="Ex: PETR4 - MXRF11 - BTC">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="cotas">Quantidade de Cotas:</label>
+                                    <input type="number" class="form-control" id="cotas" placeholder="Ex: 10 - 0.1">
+                                </div>
+                            </div>
+                
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="preco_unitario">Preço Unitário:</label>
+                                    <input type="number" class="form-control" id="preco_unitario" placeholder="Ex: 65.00 - 711.1 - 0.1">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="taxa">Taxa de Transação:</label>
+                                    <input type="number" class="form-control" id="taxa" placeholder="Ex: 0.15 - 0.001">
+                                </div>
+                            </div>
+                
+                            <div class="form-group">
+                                <label>Tipo de Transação:</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="buy" name="transacao" value="buy" onclick="enableSubmitButton()">
+                                    <label class="form-check-label" for="buy">Compra</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="sell" name="transacao" value="sell" onclick="enableSubmitButton()">
+                                    <label class="form-check-label" for="sell">Venda</label>
+                                </div>
+                            </div>
+                
+                            <button id="submit-button" class="btn btn-primary" onclick="confirmTransaction()" disabled>Ir</button>
+                            <div id="result" class="mt-3"></div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function updateFiltersAndButton() {
+                            var assetSelection = document.getElementById('asset-selection').value;
+                            var filters = document.getElementById('filters');
+                            var submitButton = document.getElementById('submit-button');
+                            
+                            // Exibir filtros adicionais quando um tipo de ativo for selecionado
+                            if (assetSelection) {
+                                filters.style.display = 'block';
+                            } else {
+                                filters.style.display = 'none';
+                                submitButton.disabled = true;  // Desativa o botão
+                            }
+                        }
+                
+                        // Função para habilitar o botão "Ir" somente quando um tipo de transação for selecionado
+                        function enableSubmitButton() {
+                            var buyChecked = document.getElementById('buy').checked;
+                            var sellChecked = document.getElementById('sell').checked;
+                            var submitButton = document.getElementById('submit-button');
+                            
+                            if (buyChecked || sellChecked) {
+                                submitButton.disabled = false; // Habilita o botão
+                            }
+                        }
+                
+                        // Função de confirmação antes de enviar o formulário
+                        function confirmTransaction() {
+                            var broker = document.getElementById('broker').value;
+                            var data = document.getElementById('data').value;
+                            var ticker = document.getElementById('ticker').value;
+                            var cotas = document.getElementById('cotas').value;
+                            var preco_unitario = document.getElementById('preco_unitario').value;
+                            var taxa = document.getElementById('taxa').value;
+                            var transacao = document.querySelector('input[name="transacao"]:checked').value;
+                
+                            // Verificar os dados inseridos e exibir uma mensagem de confirmação
+                            var confirmMessage = `Você confirmou os seguintes dados?\n
+                                Corretora: ${broker}\n
+                                Data: ${data}\n
+                                Ticker: ${ticker}\n
+                                Cotas: ${cotas}\n
+                                Preço Unitário: ${preco_unitario}\n
+                                Taxa: ${taxa}\n
+                                Tipo de Transação: ${transacao === 'buy' ? 'Compra' : 'Venda'}`;
+                            
+                            if (confirm(confirmMessage)) {
+                                // Se confirmado, submeter os dados
+                                performTransaction();
+                            }
+                        }
+                
+                        function performTransaction() {
+                            // Coletar os dados do formulário
+                            var broker = document.getElementById('broker').value;
+                            var data = document.getElementById('data').value;
+                            var ticker = document.getElementById('ticker').value;
+                            var cotas = document.getElementById('cotas').value;
+                            var preco_unitario = document.getElementById('preco_unitario').value;
+                            var taxa = document.getElementById('taxa').value;
+                            var transacao = document.querySelector('input[name="transacao"]:checked').value;
+                            var assetSelection = document.getElementById('asset-selection').value;
+                            
+                            // Verificar se os campos obrigatórios estão preenchidos
+                            if (!broker || !data || !ticker || !cotas || !preco_unitario || !taxa || !transacao) {
+                                alert("Por favor, preencha todos os campos.");
+                                return;
+                            }
+                
+                            // Enviar os dados via AJAX para o backend (Flask)
+                            fetch('/api/insert-transaction', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    corretora: broker,
+                                    data: data,
+                                    tipo: assetSelection,
+                                    ticker: ticker,
+                                    cotas: parseFloat(cotas),
+                                    preco_unitario: parseFloat(preco_unitario),
+                                    taxa: parseFloat(taxa),
+                                    transacao: transacao
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                // Exibir uma mensagem de sucesso ou erro com base na resposta do servidor
+                                document.getElementById('result').innerText = alert(data.message);
+                            })
+                            .catch(error => console.error('Erro:', error));
+                        }
+                    </script>
+
+                </div>
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Thiago Torres</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+</body>
+
+</html>

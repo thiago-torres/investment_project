@@ -1,8 +1,29 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Análise de Ativos Globais</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Investment Project - Global</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <!-- <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"> -->
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+
     <style>
         /* Spinner de carregamento */
         #loading-spinner {
@@ -19,56 +40,252 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-    </style>
-</head>
-<body>
-    <h1>Análise de Ativos Globais</h1>
-    
-    <label for="asset-selection">Selecione um grupo para análise:</label>
-    <select id="asset-selection">
-        <option value="1">Ações Brasileiras</option>
-        <option value="2">Fundos Imobiliários</option>
-        <option value="3">Criptomoedas</option>
-    </select>
-    
-    <!-- Spinner de carregamento -->
-    <div id="loading-spinner"></div>
 
-    <button onclick="performAnalysis()"> Ir </button>
-    <div id="result"></div>
-
-    <script>
-        function performAnalysis() {
-            const selected = document.getElementById('asset-selection').value;
-
-            // Exibir o spinner de carregamento
-            document.getElementById('loading-spinner').style.display = 'block';
-
-            fetch('/api/analyze-global-assets', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({ selected: selected })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro na análise dos ativos');
-                }
-                return response.text();
-            })
-            .then(data => {
-                // Ocultar o spinner de carregamento
-                document.getElementById('loading-spinner').style.display = 'none';
-                document.getElementById('result').innerHTML = data;
-            })
-            .catch(error => {
-                // Ocultar o spinner em caso de erro
-                document.getElementById('loading-spinner').style.display = 'none';
-                console.error('Ocorreu um erro:', error);
-                document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
-            });
+        /* Definir cores para diferentes faixas de valores de Fibonacci */
+        .fib-green {
+            color: green;
         }
-    </script>
+
+        .fib-yellow {
+            color: yellow;
+        }
+
+        .fib-red {
+            color: red;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        {% include 'sidebar.html' %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                {% include 'topbar.html' %}
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-4 text-gray-800">Análise de Ativos Globais</h1>
+
+                    <label for="asset-selection">Selecione um grupo para análise:</label>
+                    <select id="asset-selection">
+                        <option value="1">Ações Brasileiras</option>
+                        <option value="2">Fundos Imobiliários</option>
+                        <option value="3">Criptomoedas</option>
+                    </select>
+                    
+                    <!-- Spinner de carregamento -->
+                    <div id="loading-spinner"></div>
+                
+                    <button onclick="performAnalysis()"> Ir </button>
+                    <div id="result"></div>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Ticker</th>
+                                            <th>Value</th>
+                                            <th>EMA 1h</th>
+                                            <th>EMA Day</th>
+                                            <th>EMA Week</th>
+                                            <th>RSI 1h</th>
+                                            <th>RSI Day</th>
+                                            <th>RSI Week</th>
+                                            <th>Fib 23%</th>
+                                            <th>Fib 38%</th>
+                                            <th>Fib 50%</th>
+                                            <th>Fib 61%</th>
+                                            <th>Fib 78%</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Ticker</th>
+                                            <th>Value</th>
+                                            <th>EMA 1h</th>
+                                            <th>EMA Day</th>
+                                            <th>EMA Week</th>
+                                            <th>RSI 1h</th>
+                                            <th>RSI Day</th>
+                                            <th>RSI Week</th>
+                                            <th>Fib 23%</th>
+                                            <th>Fib 38%</th>
+                                            <th>Fib 50%</th>
+                                            <th>Fib 61%</th>
+                                            <th>Fib 78%</th>
+                                        </tr>
+                                    </tfoot>                                  
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                    // Inicializar o DataTable fora do fetch
+                    $(document).ready(function() {
+                        $('#dataTable').DataTable();
+                    });
+
+                    function performAnalysis() {
+                        const selected = document.getElementById('asset-selection').value;
+
+                        // Exibir o spinner de carregamento
+                        document.getElementById('loading-spinner').style.display = 'block';
+
+                        fetch('/api/analyze-global-assets', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ selected })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro na análise dos ativos');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Ocultar o spinner de carregamento
+                            document.getElementById('loading-spinner').style.display = 'none';
+
+                            const dataTable = $('#dataTable').DataTable();
+                            dataTable.clear();
+
+                            // Função para determinar a classe com base nos valores das Fibonacci e do Value
+                            function getFibClass(value, fib) {
+                                if (fib > value) return 'fib-red';
+                                if (fib < value) return 'fib-green';
+                                return 'fib-yellow'; // Fibo mais próxima (se for exatamente igual ao valor)
+                            }
+
+                            // Função para aplicar o gradiente do RSI
+                            function getRSIClass(rsi) {
+                                if (rsi < 30) return 'rsi-low';
+                                if (rsi > 70) return 'rsi-high';
+                                return 'rsi-medium';
+                            }
+
+                            // Iterar sobre os dados e adicionar linhas à DataTable
+                            data.forEach(item => {
+                                const value = item.Value;
+
+                                dataTable.row.add([
+                                    item.Ticker,
+                                    item.Value,
+                                    formatCell(item['EMA 1h'], item.Value),
+                                    formatCell(item['EMA Day'], item.Value),
+                                    formatCell(item['EMA Week'], item.Value),
+                                    formatRsi(item['RSI 1h']),
+                                    formatRsi(item['RSI Day']),
+                                    formatRsi(item['RSI Week']),
+                                    `<span class="${getFibClass(value, item['Fib 23%'])}">${item['Fib 23%']}</span>`,
+                                    `<span class="${getFibClass(value, item['Fib 38%'])}">${item['Fib 38%']}</span>`,
+                                    `<span class="${getFibClass(value, item['Fib 50%'])}">${item['Fib 50%']}</span>`,
+                                    `<span class="${getFibClass(value, item['Fib 61%'])}">${item['Fib 61%']}</span>`,
+                                    `<span class="${getFibClass(value, item['Fib 78%'])}">${item['Fib 78%']}</span>`
+                                ]);
+                            });
+
+                            dataTable.draw();
+                        })
+                        .catch(error => {
+                            document.getElementById('loading-spinner').style.display = 'none';
+                            console.error('Ocorreu um erro:', error);
+                            document.getElementById('result').innerHTML = 'Ocorreu um erro ao buscar os dados.';
+                        });
+                    }
+                    
+                    function formatCell(value, refValue) {
+                        if (value !== null && refValue !== null && value <= refValue) {
+                            return `<span style="color: green">${value}</span>`;
+                        }
+                        return value;
+                    }
+
+                    // Função para aplicar gradiente de cor ao RSI
+                    function formatRsi(value) {
+                        if (value === null) {
+                            return '-';
+                        }
+
+                        if (value < 20) {
+                            return `<span style="color: green">${value}</span>`;
+                        } else if (value > 80) {
+                            return `<span style="color: red">${value}</span>`;
+                        } else {
+                            const green = Math.round(255 * (1 - (value - 20) / 60));
+                            const red = Math.round(255 * ((value - 20) / 60));
+                            return `<span style="color: rgb(${red}, ${green}, 0)">${value}</span>`;
+                        }
+                    }
+                    </script>        
+
+                </div>
+                <!-- Content Row -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Thiago Torres</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ url_for('static', filename='js/demo/datatables-demo.js') }}"></script>
+
 </body>
+
 </html>

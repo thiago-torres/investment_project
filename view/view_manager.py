@@ -7,7 +7,7 @@ class ViewManager():
         self.analyzed_assets = None
 
     def analyze_global_assets(self, selected):
-        self.analyzed_assets = self.controller.analysis_global_asset(selected)
+        self.analyzed_assets = self.controller.analysis_global_asset(selected)        
         return self.display_analyzed_assets()
 
     def analyze_personal_assets(self, selected, filter):
@@ -16,12 +16,19 @@ class ViewManager():
             print(self.analyzed_assets)
             return self.analyzed_assets.to_html(escape=False)
         else:
-            return self.display_analyzed_assets()
+            return self.display_analyzed_assets().to_html(escape=False)
 
     def display_analyzed_assets(self):
         if self.analyzed_assets is not None and not self.analyzed_assets.empty:
             self.analyzed_assets = self.analyzed_assets.sort_values(by='RSI Week')
-            self.analyzed_assets.index = [link_tradingview(ticker) for ticker in self.analyzed_assets.index]
-            styled_df = style_dataframe(self.analyzed_assets)
-            return styled_df.to_html(escape=False)
+            self.analyzed_assets["Ticker"] = [link_tradingview(ticker) for ticker in self.analyzed_assets["Ticker"]]
+            
+            return self.analyzed_assets
         return '<p>Nenhum ativo analisado.</p>'
+    
+    def get_chart_data(self):
+        data = self.controller.get_chart_data()
+        return data
+    
+    def insert_db_transaction(self, corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa):
+        return self.controller.insert_db_transaction(corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa)

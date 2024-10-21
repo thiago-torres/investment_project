@@ -43,4 +43,22 @@ class ControllerManager():
             self.selected_assets = db.get_transactions(filter)
             return self.selected_assets
         
-        
+    def get_chart_data(self):
+        db = ModelManager()
+        self.selected_assets = db.get_assets()
+        self.selected_assets['investido'] = self.selected_assets['cotas'] * self.selected_assets['pm']
+
+        grouped_data = self.selected_assets.groupby('tipo')['investido'].sum()
+        total_invest = grouped_data.sum()
+
+        porcentagem = (grouped_data / total_invest * 100).round(2)
+
+        data = {
+            "labels": list(porcentagem.index),
+            "values": list(porcentagem.values)
+        }
+        return data
+
+    def insert_db_transaction(self, corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa):
+        db = ModelManager()
+        return db.insert_transaction(corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa)

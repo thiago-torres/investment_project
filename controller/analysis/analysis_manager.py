@@ -41,6 +41,7 @@ class AnalysisManager:
 
                 analized_ticker = pd.DataFrame(
                     {
+                        "Ticker":ticker,
                         "Value":self.asset_currently,
                         "EMA 1h":[self.asset_hour['EMA'].iloc[-1]],
                         "EMA Day":[self.asset_day['EMA'].iloc[-1]],
@@ -52,10 +53,10 @@ class AnalysisManager:
                     }
                 )
                 
-                analized_assets = pd.concat([analized_assets,analized_ticker])            
-                print(analized_assets)
+                analized_assets = pd.concat([analized_assets,analized_ticker])       
+                
             analized_assets = analized_assets.round(3)
-            return analized_assets.set_index([assets['tickers']])
+            return analized_assets
 
         elif assets["library"] == "mb":
             api = MercadoBitcoinPublicData()
@@ -94,6 +95,7 @@ class AnalysisManager:
 
                 analized_ticker = pd.DataFrame(
                     {
+                        "Ticker": ticker,
                         "Value":self.asset_currently,
                         "EMA 1h":[self.asset_hour['EMA'].iloc[-1]],
                         "EMA Day":[self.asset_day['EMA'].iloc[-1]],
@@ -106,9 +108,9 @@ class AnalysisManager:
                 )
                 
                 analized_assets = pd.concat([analized_assets,analized_ticker])            
-                print(analized_assets)
+                
             analized_assets = analized_assets.round(3)
-            return analized_assets.set_index([assets['tickers']])
+            return analized_assets
 
         elif assets["library"] == "coinalyze":
             print("coinanalyze off")
