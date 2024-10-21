@@ -42,15 +42,22 @@
                 <!-- <a class="collapse-item" href="{{ url_for('global_assets') }}">Global</a> -->
                 <div class="collapse-divider"></div>
                 <a class="collapse-item" href="{{ url_for('personal_assets') }}">Analisar Meus Ativos</a>
+                <div class="collapse-divider"></div>
+                <a class="collapse-item" href="{{ url_for('register_transaction') }}">Registrar Transações</a>
             </div>
         </div>
     </li>
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('register_transaction') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Registrar Transações</span></a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="{{ url_for('global_assets') }}">
             <i class="fas fa-fw fa-table"></i>
-            <span>Análise Ativos</span></a>
+            <span>Análise Ativos Globais</span></a>
     </li>
 
     <!-- Divider -->
