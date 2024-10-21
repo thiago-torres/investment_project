@@ -29,3 +29,6 @@ class ViewManager():
     def get_chart_data(self):
         data = self.controller.get_chart_data()
         return data
+    
+    def insert_db_transaction(self, corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa):
+        return self.controller.insert_db_transaction(corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa)

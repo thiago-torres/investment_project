@@ -59,4 +59,6 @@ class ControllerManager():
         }
         return data
 
-        
+    def insert_db_transaction(self, corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa):
+        db = ModelManager()
+        return db.insert_transaction(corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa)

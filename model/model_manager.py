@@ -35,10 +35,14 @@ class ModelManager:
             conn.commit()    
 
     def insert_transaction(self, corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa):
+        if cotas <= 0:
+            return "A quantidade de cotas deve ser maior que zero."
+    
         if transacao.lower() == 'sell':
-            if not self.is_valid_sell(ticker, cotas):
-                raise ValueError("Transação de venda superior ao valor disponível do ativo.")
-        
+            valid, message = self.is_valid_sell(ticker, cotas, tipo)
+            if not valid:
+                return message  # Retorna mensagem de "erro" e não insere a transação
+
         query = '''
             INSERT INTO transacoes (corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -46,25 +50,29 @@ class ModelManager:
         self.execute_query(query, (corretora, data, tipo, ticker, transacao, cotas, preco_unitario, taxa))
 
         self.update_or_insert_asset(tipo, ticker, cotas, preco_unitario, transacao)
+        
+        return "Transação inserida com sucesso!"
 
-    def is_valid_sell(self, ticker, cotas):
+    def is_valid_sell(self, ticker, cotas, tipo):
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT cotas FROM ativos WHERE ticker = ?", (ticker,))
+            cursor.execute("SELECT cotas FROM ativos WHERE ticker = ? AND tipo = ?", (ticker,tipo))
             result = cursor.fetchone()
             
             if result:
                 cotas_existentes = result[0]
-                return cotas_existentes >= cotas
+                if cotas_existentes >= cotas:
+                    return True, "" 
+                else:
+                    return False, "Transação de venda superior ao valor disponível do ativo."
             else:
-                return False
-
+                return False, "Ativo não encontrado."
 
     def update_or_insert_asset(self, tipo, ticker, cotas, preco_unitario, transacao):
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             
-            cursor.execute("SELECT cotas, pm FROM ativos WHERE ticker = ?", (ticker,))
+            cursor.execute("SELECT cotas, pm FROM ativos WHERE ticker = ? AND tipo = ?", (ticker, tipo))
             result = cursor.fetchone()
 
             if result:
@@ -78,11 +86,11 @@ class ModelManager:
                     novo_pm = pm_existente 
 
                 if novas_cotas <= 0:
-                    cursor.execute("DELETE FROM ativos WHERE ticker = ?", (ticker,))
+                    cursor.execute("DELETE FROM ativos WHERE ticker = ? AND tipo = ?", (ticker, tipo))
                 else:
                     cursor.execute(
-                        "UPDATE ativos SET cotas = ?, pm = ? WHERE ticker = ?",
-                        (novas_cotas, novo_pm, ticker)
+                        "UPDATE ativos SET cotas = ?, pm = ? WHERE ticker = ? AND tipo = ?",
+                        (novas_cotas, novo_pm, ticker, tipo)
                     )
             else:
                 if transacao.lower() == 'buy':
@@ -91,3 +99,4 @@ class ModelManager:
                         (tipo, ticker, cotas, preco_unitario)
                     )
             conn.commit()
+

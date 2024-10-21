@@ -23,16 +23,37 @@ def global_assets():
 @app.route('/personal-assets')
 def personal_assets():
     return render_template('personal-assets.html')
+
+@app.route('/register-transaction')
+def register_transaction():
+    return render_template('register-transaction.html')
     
 @app.route('/chart-data')
 def chart_data():
     data = view_manager.get_chart_data()    
     return jsonify(data)
 
+@app.route('/api/insert-transaction', methods = ['POST'])
+def insert_transaction():
+    data = request.json
+    result =  {"message":     
+        view_manager.insert_db_transaction(
+            corretora=data['corretora'],
+            data=data['data'], 
+            tipo=data['tipo'], 
+            ticker=data['ticker'], 
+            transacao=data['transacao'], 
+            cotas=data['cotas'], 
+            preco_unitario=data['preco_unitario'], 
+            taxa=data['taxa']
+        )}
+
+    return jsonify(result)
+
 @app.route('/api/analyze-global-assets', methods=['POST'])
 def analyze_global_assets():
     data = request.json
-    selected = data.get('selected')
+    selected = data
     result = view_manager.analyze_global_assets(selected)
 
     result = result.to_json(orient='records')
