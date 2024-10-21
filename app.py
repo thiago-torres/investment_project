@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 from view.view_manager import ViewManager
 
+import requests
+
 app = Flask(__name__)
 view_manager = ViewManager()
 
@@ -82,6 +84,24 @@ def analyze_personal_assets():
         return result
     else:
         return jsonify({'error': 'No assets analyzed.'}), 404
+    
+@app.route('/ibovespa', methods=['GET'])
+def get_ibovespa_data():
+    url = "https://query1.finance.yahoo.com/v8/finance/chart/%5EBVSP?range=1d&interval=1d"
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+    }
+
+    try:
+        response = requests.get(url=url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return jsonify(data)  # Retorna os dados para o frontend
+
+    except requests.exceptions.HTTPError as http_err:
+        return jsonify({"error": f"Erro HTTP: {http_err}"}), 400
+    except Exception as err:
+        return jsonify({"error": f"Ocorreu um erro: {err}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
