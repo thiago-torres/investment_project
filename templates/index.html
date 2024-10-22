@@ -48,7 +48,7 @@
                     <div class="col-xl-4 col-lg-5">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Investimento em Ativos</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Portfólio</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -64,11 +64,12 @@
                             </div>
                             <div class="card-body">
                                 <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChart"></canvas>
+                                    <!-- Usar IDs dinâmicos ou descritivos para cada gráfico -->
+                                    <canvas id="portfolioPieChart"></canvas>
                                 </div>
                                 <div class="mt-2 text-center small">
                                     <!-- Legendas geradas dinamicamente -->
-                                    <div id="chartLegend"></div>
+                                    <div id="portfolioChartLegend"></div>
                                 </div>
                             </div>
                         </div>
@@ -114,12 +115,7 @@
     <script src="{{ url_for('static', filename='vendor/chart.js/Chart.min.js') }}"></script>
 
     <!-- Page level custom scripts -->
-    <script src="{{ url_for('static', filename='js/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/demo/chart-pie-demo.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/demo/chart-bar-demo.js') }}"></script>
-
-    <!-- Importar o arquivo JS do gráfico -->
-    <script src="{{ url_for('static', filename='js/chart-pie.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/portfolioPieChart.js') }}"></script>
 
 </body>
 
