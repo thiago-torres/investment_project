@@ -30,9 +30,10 @@ def personal_assets():
 def register_transaction():
     return render_template('register-transaction.html')
     
-@app.route('/chart-data')
-def chart_data():
-    data = view_manager.get_chart_data()    
+@app.route('/portfolio-pie-chart')
+def portfolio_chart():
+    data = view_manager.get_portfolio_chart_data()    
+    print(data)
     return jsonify(data)
 
 @app.route('/api/insert-transaction', methods = ['POST'])
@@ -55,7 +56,7 @@ def insert_transaction():
 @app.route('/api/analyze-global-assets', methods=['POST'])
 def analyze_global_assets():
     data = request.json
-    selected = data
+    selected = data.get("selected")
     result = view_manager.analyze_global_assets(selected)
 
     result = result.to_json(orient='records')
