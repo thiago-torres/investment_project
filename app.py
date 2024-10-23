@@ -29,6 +29,10 @@ def personal_assets():
 @app.route('/register-transaction')
 def register_transaction():
     return render_template('register-transaction.html')
+
+@app.route('/charts')
+def charts():
+    return render_template('charts.html')
     
 @app.route('/portfolio-pie-chart')
 def portfolio_chart():

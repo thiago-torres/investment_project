@@ -4,7 +4,8 @@
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
-
+    
+    
     <!-- Flex Container for Prices -->
     <div class="d-flex align-items-center ml-auto">
         <!-- Bitcoin Price Display -->
@@ -29,6 +30,39 @@
             </span>
         </div>
     </div>
+
+    <!-- TradingView Widget BEGIN -->
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget" style="height: 100%; width: 100%;"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async> 
+        {
+        "symbols": [
+        {
+            "proName": "FOREXCOM:SPXUSD",
+            "title": "S&P 500"
+        },
+        {
+            "proName": "FX_IDC:USDBRL",
+            "title": "USD-BRL"
+        },
+        {
+            "proName": "BMFBOVESPA:IBOV",
+            "title": "IBOVESPA"
+        },
+        {
+            "proName": "BMFBOVESPA:IFIX",
+            "title": "IFIX"
+        }
+        ],
+        "showSymbolLogo": true,
+        "isTransparent": false,
+        "displayMode": "adaptive",
+        "colorTheme": "light",
+        "locale": "en"
+    }
+        </script>
+    </div>
+    <!-- TradingView Widget END -->
 </nav>
 
 <!-- WebSocket Script -->
