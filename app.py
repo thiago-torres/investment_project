@@ -18,6 +18,10 @@ def blank():
 def page404():
     return render_template('404.html')
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
 @app.route('/global-assets')
 def global_assets():
     return render_template('global-assets.html')
@@ -33,12 +37,14 @@ def register_transaction():
 @app.route('/charts')
 def charts():
     return render_template('charts.html')
+
+@app.route('/transaction-review')
+def transaction_review():
+    return render_template('transaction-review.html')
     
 @app.route('/portfolio-pie-chart')
 def portfolio_chart():
-    data = view_manager.get_portfolio_chart_data()    
-    print(data)
-    return jsonify(data)
+    return jsonify(view_manager.get_portfolio_chart_data())
 
 @app.route('/api/insert-transaction', methods = ['POST'])
 def insert_transaction():
@@ -65,8 +71,6 @@ def analyze_global_assets():
 
     result = result.to_json(orient='records')
 
-    print(result)
-
     if result:
         return result
     else:
@@ -83,7 +87,7 @@ def analyze_personal_assets():
     if asset_type == 'outros':
         asset_type = other_asset
 
-    result = view_manager.analyze_personal_assets(selected, asset_type)
+    result = view_manager.analyze_personal_assets(selected, asset_type).to_json(orient='records')
     
     if result:
         return result

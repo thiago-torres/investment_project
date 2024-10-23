@@ -30,22 +30,29 @@
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('personal_assets') }}">
-            <i class="fas fa-fw fa-search"></i>
+            <i class="fas fa-fw fa-balance-scale"></i>
             <span>Análise de Ativos</span></a>
     </li>
    
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('personal_assets') }}">
-            <i class="fas fa-fw fa-search"></i>
+            <i class="fas fa-fw fa-wallet"></i>
             <span>Consultar Ativos</span></a>
     </li>
-
+   
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('register_transaction') }}">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-plus-circle"></i>
             <span>Registrar Transações</span></a>
+    </li>
+
+        <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('transaction_review') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Consultar Transações</span></a>
     </li>
 
     <!-- Divider -->
@@ -58,15 +65,15 @@
 
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('global_assets') }}">
-            <i class="fas fa-fw fa-search"></i>
+            <i class="fas fa-fw fa-search-dollar"></i>
             <span>Análise de Ativos</span></a>
     </li>
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="{{ url_for('charts') }}">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a>
+            <i class="fas fa-fw fa-chart-line"></i>
+            <span>Gráficos de Index</span></a>
     </li>
 
     <!-- Divider -->

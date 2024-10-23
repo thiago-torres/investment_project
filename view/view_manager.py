@@ -1,5 +1,5 @@
 from controller.controller_manager import ControllerManager
-from view.utils.display import link_tradingview, style_dataframe
+from view.utils.display import link_tradingview
 
 class ViewManager():
     def __init__(self):
@@ -14,7 +14,7 @@ class ViewManager():
         self.analyzed_assets = self.controller.analysis_my_asset(selected, filter)
         if selected != '1':
             print(self.analyzed_assets)
-            return self.analyzed_assets.to_html(escape=False)
+            return self.analyzed_assets
         else:
             return self.display_analyzed_assets().to_html(escape=False)
 
