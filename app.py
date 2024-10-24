@@ -46,6 +46,10 @@ def transaction_review():
 def portfolio_review():
     return render_template('portfolio-review.html')
 
+@app.route('/analyze-my-assets')
+def analyze_my_assets():
+    return render_template('analyze-my-assets.html')
+
 @app.route('/portfolio-pie-chart')
 def portfolio_chart():
     return jsonify(view_manager.get_portfolio_chart_data())
@@ -70,8 +74,8 @@ def insert_transaction():
 @app.route('/api/analyze-global-assets', methods=['POST'])
 def analyze_global_assets():
     data = request.json
-    selected = data.get("selected")
-    result = view_manager.analyze_global_assets(selected)
+    
+    result = view_manager.analyze_global_assets(data.get("selected"))
 
     result = result.to_json(orient='records')
 
@@ -84,14 +88,8 @@ def analyze_global_assets():
 @app.route('/api/analyze-personal-assets', methods=['POST'])
 def analyze_personal_assets():
     data = request.json
-    selected = data.get('selected')
-    asset_type = data.get('assetType')
-    other_asset = data.get('otherAsset')
 
-    if asset_type == 'outros':
-        asset_type = other_asset
-
-    result = view_manager.analyze_personal_assets(selected, asset_type).to_json(orient='records')
+    result = view_manager.analyze_personal_assets(data.get('selected'), data.get('assetType')).to_json(orient='records')
     
     if result:
         return result

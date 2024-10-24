@@ -19,6 +19,13 @@
             <span>Dashboard</span></a>
     </li>
 
+    <!-- Nav Item - Tables -->
+    <li class="nav-item active">
+        <a class="nav-link" href="{{ url_for('portfolio_review') }}">
+            <i class="fas fa-fw fa-wallet"></i>
+            <span>Carteira</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -29,16 +36,9 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('personal_assets') }}">
+        <a class="nav-link" href="{{ url_for('analyze_my_assets') }}">
             <i class="fas fa-fw fa-balance-scale"></i>
-            <span>Análise de Ativos</span></a>
-    </li>
-   
-    <!-- Nav Item - Tables -->
-    <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('portfolio_review') }}">
-            <i class="fas fa-fw fa-wallet"></i>
-            <span>Consultar Ativos</span></a>
+            <span>Analisar meus ativos</span></a>
     </li>
    
     <!-- Nav Item - Tables -->
