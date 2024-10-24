@@ -21,17 +21,31 @@ class ControllerManager():
         db = ModelManager()
         
         if selected == '1':
-            self.selected_assets = db.get_assets(filter)
-            asset_names = self.selected_assets['ticker'].tolist()
+            if filter != 'cripto':
+                self.selected_assets = db.get_assets(filter)
+                asset_names = self.selected_assets['ticker'].tolist()
 
-            assets_data = {
-                'library': 'yfinance',
-                'start_date': '2020-01-01',
-                'tickers': asset_names
-            }
-            
-            print(assets_data) 
-            return self.analysis.analysis_asset_process(assets=assets_data)
+                assets_data = {
+                    'library': 'yfinance',
+                    'start_date': '2020-01-01',
+                    'tickers': asset_names
+                }
+                
+                print(assets_data) 
+                return self.analysis.analysis_asset_process(assets=assets_data)
+            else:
+                self.selected_assets = db.get_assets(filter)
+                self.selected_assets['ticker'] = self.selected_assets['ticker']+"-BRL"
+                asset_names = self.selected_assets['ticker'].tolist()
+
+                assets_data = {
+                    "library":"mb",
+                    "start_date": "1665979200",
+                    'tickers': asset_names
+                }
+                
+                print(assets_data) 
+                return self.analysis.analysis_asset_process(assets=assets_data)
         
         elif selected == '2':
             self.selected_assets = db.get_assets(filter)
