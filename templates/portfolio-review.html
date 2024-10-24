@@ -59,10 +59,8 @@
                                             <th>Categoria</th>
                                             <th>Ticker</th>
                                             <th>Quantidade</th>
-                                            <th>PM</th>
-                                            <th>Atual</th>
-                                            <th>Total Investido</th>
-                                            <th>Valor de Mercado</th>
+                                            <th>Preço Unidade</th>
+                                            <th>Desempenho</th>
                                             <th>Variação</th>
                                         </tr>
                                     </thead>
@@ -73,13 +71,11 @@
                                             <th>Categoria</th>
                                             <th>Ticker</th>
                                             <th>Quantidade</th>
-                                            <th>PM</th>
-                                            <th>Atual</th>
-                                            <th>Total Investido</th>
-                                            <th>Valor de Mercado</th>
+                                            <th>Preço Unidade</th>
+                                            <th>Desempenho</th>
                                             <th>Variação</th>
                                         </tr>
-                                    </tfoot>                                  
+                                    </tfoot>                                
                                     <tbody>
                                         
                                     </tbody>
@@ -89,77 +85,66 @@
                     </div>
 
                     <script>
-                    
-                    const selected = "2";
-
-                    document.getElementById('loading-spinner').style.display = 'block';
-
-                    fetch('/api/analyze-personal-assets', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ selected: selected })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro na análise dos ativos');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-
-                        document.getElementById('loading-spinner').style.display = 'none';
-                        const dataTable = $('#dataTable').DataTable();
-                        dataTable.clear(); 
-
-                        // Função para formatar o valor com base na comparação
-                        function formatAtual(investido, valor_atual) {
-                            if (valor_atual < investido) {
-                                return `<span style="color: red">${valor_atual}</span>`;
-                            } else {
-                                return `<span style="color: green">${valor_atual}</span>`;
+                        const selected = "2";
+                        
+                        document.getElementById('loading-spinner').style.display = 'block';
+                        
+                        fetch('/api/analyze-personal-assets', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ selected: selected })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro na análise dos ativos');
                             }
-                        }
-
-                        function formatInvestment(pm, atual) {
-                            if (atual < pm) {
-                                return `<span style="color: red">R$ ${atual}</span>`;
-                            } else {
-                                return `<span style="color: green">R$ ${atual}</span>`;
+                            return response.json();
+                        })
+                        .then(data => {
+                        
+                            document.getElementById('loading-spinner').style.display = 'none';
+                            const dataTable = $('#dataTable').DataTable();
+                            dataTable.clear(); 
+                        
+                            // Função para formatar o valor de PM e Atual na mesma célula
+                            function formatPriceUnit(pm, atual) {
+                                let colorAtual = atual < pm ? 'red' : 'green';
+                                return `PM: R$ ${pm}<br>Atual: <span style="color: ${colorAtual}">R$ ${atual}</span>`;
                             }
-                        }
-
-                        function formatVariacao(variacao) {
-                            if (variacao < 0) {
-                                return `<span style="color: red">R$ ${variacao}</span>`;
-                            } else {
-                                return `<span style="color: green">R$ +${variacao}</span>`;
+                        
+                            // Função para formatar Investimento e Valor de Mercado na mesma célula
+                            function formatInvestVsMarket(investido, valor_atual) {
+                                let color = valor_atual < investido ? 'red' : 'green';
+                                return `Investido: R$ ${investido}<br>Mercado: <span style="color: ${color}">R$ ${valor_atual}</span>`;
                             }
-                        }
-
-                        data.forEach(item => {
-                            dataTable.row.add([
-                                item.id,
-                                item.tipo,
-                                item.ticker,
-                                item.cotas,
-                                item.pm,
-                                formatAtual(item.pm, item.atual),
-                                item.investido,
-                                formatInvestment(item.investido, item.valor_atual),
-                                formatVariacao(item.variacao)
-                            ]);
+                        
+                            function formatVariacao(variacao) {
+                                let color = variacao < 0 ? 'red' : 'green';
+                                return `<span style="color: ${color}">R$ ${variacao}</span>`;
+                            }
+                        
+                            data.forEach(item => {
+                                dataTable.row.add([
+                                    item.id,
+                                    item.tipo,
+                                    item.ticker,
+                                    item.cotas,
+                                    formatPriceUnit(item.pm, item.atual), // Combina PM e Atual
+                                    formatInvestVsMarket(item.investido, item.valor_atual), // Combina Investido e Mercado
+                                    formatVariacao(item.variacao)
+                                ]);
+                            });
+                        
+                            dataTable.draw();
+                        })
+                        .catch(error => {
+                            document.getElementById('loading-spinner').style.display = 'none';
+                            console.error('Ocorreu um erro:', error);
+                            alert('Ocorreu um erro ao buscar os dados.');
                         });
-
-                        dataTable.draw();
-                    })
-                    .catch(error => {
-                        document.getElementById('loading-spinner').style.display = 'none';
-                        console.error('Ocorreu um erro:', error);
-                        alert('Ocorreu um erro ao buscar os dados.');
-                    });
-                    </script>        
+                        </script>                        
                 </div>
             </div>
             <!-- End of Main Content -->
