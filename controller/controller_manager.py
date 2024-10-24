@@ -37,8 +37,9 @@ class ControllerManager():
             self.selected_assets = db.get_assets(filter)
             self.selected_assets['atual'] = self.analysis.analysis_personal_assets(self.selected_assets['ticker'])
             self.selected_assets['investido'] = self.selected_assets['cotas'] * self.selected_assets['pm']
-            self.selected_assets['valor atual'] = self.selected_assets['cotas'] * self.selected_assets['atual']
-            return self.selected_assets
+            self.selected_assets['valor_atual'] = self.selected_assets['cotas'] * self.selected_assets['atual']
+            self.selected_assets['variacao'] = self.selected_assets['valor_atual'] - self.selected_assets['investido']
+            return self.selected_assets.round(2)
         else:
             self.selected_assets = db.get_transactions(filter)
             return self.selected_assets

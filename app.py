@@ -42,6 +42,10 @@ def charts():
 def transaction_review():
     return render_template('transaction-review.html')
     
+@app.route('/portfolio-review')
+def portfolio_review():
+    return render_template('portfolio-review.html')
+
 @app.route('/portfolio-pie-chart')
 def portfolio_chart():
     return jsonify(view_manager.get_portfolio_chart_data())
