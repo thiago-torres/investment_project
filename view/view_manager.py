@@ -13,10 +13,9 @@ class ViewManager():
     def analyze_personal_assets(self, selected, filter):
         self.analyzed_assets = self.controller.analysis_my_asset(selected, filter)
         if selected != '1':
-            print(self.analyzed_assets)
             return self.analyzed_assets
         else:
-            return self.display_analyzed_assets().to_html(escape=False)
+            return self.display_analyzed_assets()
 
     def display_analyzed_assets(self):
         if self.analyzed_assets is not None and not self.analyzed_assets.empty:

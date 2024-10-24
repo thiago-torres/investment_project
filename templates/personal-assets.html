@@ -56,7 +56,7 @@
                         <label for="asset-type">Selecione o filtro:</label>
                         <select id="asset-type" onchange="checkOtherAsset()">
                             <option value="">Sem filtro</option>
-                            <option value="stock">Ações</option>
+                            <option value="ações">Ações</option>
                             <option value="fii">FIIs</option>
                             <option value="outros">Outros</option>
                         </select>
@@ -66,12 +66,12 @@
                             <input type="text" id="other-asset" placeholder="Ex: DASA">
                         </div>
                     </div>
-                
-                    <!-- Spinner de carregamento -->
-                    <div id="loading-spinner"></div>
-                
+                              
                     <!-- Botão desativado inicialmente -->
                     <button id="submit-button" onclick="performPersonalAnalysis()" disabled> Ir </button>
+                    
+                    <!-- Spinner de carregamento -->
+                    <div id="loading-spinner"></div>
                     <div id="result"></div>
                 
                     <script>
