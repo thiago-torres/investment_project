@@ -34,9 +34,13 @@ def personal_assets():
 def register_transaction():
     return render_template('register-transaction.html')
 
-@app.route('/charts')
-def charts():
-    return render_template('charts.html')
+@app.route('/charts-index')
+def charts_index():
+    return render_template('charts-index.html')
+
+@app.route('/charts-crypto')
+def charts_crypto():
+    return render_template('charts-crypto.html')
 
 @app.route('/transaction-review')
 def transaction_review():
